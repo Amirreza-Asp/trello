@@ -6,10 +6,11 @@ import { CSSProperties } from "react";
 import Todolist from "./todo-list";
 
 interface Props {
-  list: TodoList
+  list: TodoList,
+  removeList : (id : number)=>void
 }
 
-export default function SortableTodoList({ list }: Props) {
+export default function SortableTodoList({ list  , removeList}: Props) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: list.id.toString() })
 
  const transformWithoutScale = transform
@@ -27,7 +28,7 @@ export default function SortableTodoList({ list }: Props) {
 
   return (
     <div ref={setNodeRef} style={style} {...attributes}>
-      <Todolist list={list} dragListeners={listeners}/>
+      <Todolist removeList={removeList} list={list} dragListeners={listeners}/>
     </div>
   )
 }

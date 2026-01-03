@@ -8,7 +8,7 @@ export default function CreateTodoList() {
   const [title , setTitle] = useState<string>('')
   
   const addTodo = ()=>{
-    createList(title);
+    createList(title,1);
     setIsAddAnotherList(false);
   }
 

@@ -1,5 +1,5 @@
 export interface TodoCard{
     id : number,
     title : string,
-    comments : []
+    todoListId : number
 }

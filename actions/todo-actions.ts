@@ -1,47 +1,33 @@
 'use server'
 
-import { IBoardRepository } from '@/repository/IBoardRepository'
+import { ITodoCardRepository } from '@/repository/ITodoCardRepository'
+import { ITodoListRepository } from '@/repository/ITodoListRepository'
 import { createRequestContainer } from '@/repository/requestContainer'
 import { TodoList } from '@/types/todoList'
 import { revalidatePath } from 'next/cache'
 
-export async function createList(title: string) {
+export async function createList(title: string, boardId: number) {
   const requestContainer = createRequestContainer()
-  const boardRepository = requestContainer.resolve<IBoardRepository>('IBoardRepository');
+  const todoListRepository = requestContainer.resolve<ITodoListRepository>('ITodoListRepository');
 
   let todoList: TodoList = {
     id: Math.random(),
     title: title,
-    todoCards: []
+    boardId: boardId
   }
 
-  boardRepository.addTodoList(todoList)
+  todoListRepository.add(todoList)
 
   revalidatePath('/')
 }
 
-export async function deleteList(id: number) {
+
+export async function removeTodoCardsByTodoListId(todoListId: number) {
   const requestContainer = createRequestContainer()
-  const boardRepository = requestContainer.resolve<IBoardRepository>('IBoardRepository');
-  boardRepository.removeTodoList(id);
+  const todoCardRepository = requestContainer.resolve<ITodoCardRepository>('ITodoCardRepository');
+
+  todoCardRepository.removeRangeByTodoListId(todoListId);
 
   revalidatePath('/')
 }
-export async function removeTodoListCards(id: number) {
-  const requestContainer = createRequestContainer()
-  const boardRepository = requestContainer.resolve<IBoardRepository>('IBoardRepository');
-  boardRepository.removeTodoListCards(id);
-
-  revalidatePath('/')
-}
-
-
-export async function updateTodoLists(todoLists: TodoList[]) {
-  const requestContainer = createRequestContainer()
-  const boardRepository = requestContainer.resolve<IBoardRepository>('IBoardRepository');
-  boardRepository.updateTodoListRange(todoLists);
-
-  revalidatePath('/')
-}
-
 

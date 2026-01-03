@@ -1,37 +1,50 @@
-'use client'
+"use client";
 
 import {
-    closestCenter,
-    DndContext,
-    DragEndEvent,
-    PointerSensor,
-    useSensor,
-    useSensors,
+  closestCenter,
+  DndContext,
+  DragEndEvent,
+  PointerSensor,
+  useSensor,
+  useSensors,
 } from "@dnd-kit/core";
 
 import SortableTodoList from "@/components/todos/todoLists/sortable-todo-list";
 
-import { updateTodoLists } from "@/actions/todo-actions";
 import { TodoList } from "@/types/todoList";
 import {
-    arrayMove,
-    horizontalListSortingStrategy,
-    SortableContext,
+  arrayMove,
+  horizontalListSortingStrategy,
+  SortableContext,
 } from "@dnd-kit/sortable";
 import { useEffect, useState } from "react";
 import CreateTodoList from "./create-todo-list";
 
 interface Props {
-  todoLists: TodoList[];
+  boardId: number;
 }
 
-export default function TodoListsContainer({ todoLists : initialTodoLists }: Props) {
-  const sensors = useSensors(useSensor(PointerSensor));  
-  const [todoLists , setTodoLists] = useState<TodoList[]>(initialTodoLists)
-  
-  useEffect(()=>{
-    setTodoLists(initialTodoLists);
-  } , [initialTodoLists])
+export default function TodoListsContainer({ boardId }: Props) {
+  const sensors = useSensors(useSensor(PointerSensor));
+  const [todoLists, setTodoLists] = useState<TodoList[]>([]);
+
+  useEffect(() => {
+    getTodoLists();
+  }, [boardId]);
+
+  const getTodoLists = async () => {
+    const response = await fetch(
+      `/api/todoList/getListByBoardId?boardId=${boardId}`
+    );
+    const todoLists = (await response.json()).data as TodoList[];
+    setTodoLists(todoLists);
+  };
+
+  const removeList = (id: number) => {
+    setTodoLists((oldTodoLists) => {
+      return [...oldTodoLists.filter((todoList) => todoList.id !== id)];
+    });
+  };
 
   async function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
@@ -43,11 +56,19 @@ export default function TodoListsContainer({ todoLists : initialTodoLists }: Pro
         (list) => list.id.toString() === over?.id.toString()
       );
       const newLists = arrayMove(todoLists, oldIndex, newIndex);
+      newLists.forEach((list, index) => (list.sortOrder = index));
       setTodoLists(newLists);
-      await updateTodoLists(newLists);
+      await sendUpdateListsRequest(newLists);
     }
   }
 
+  const sendUpdateListsRequest = async (newLists: TodoList[]) => {
+    await fetch("/api/todoList/update", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newLists),
+    });
+  };
 
   return (
     <DndContext
@@ -61,7 +82,7 @@ export default function TodoListsContainer({ todoLists : initialTodoLists }: Pro
       >
         <main className="board" style={{ display: "flex", gap: "16px" }}>
           {todoLists.map((list) => (
-            <SortableTodoList key={list.id} list={list} />
+            <SortableTodoList removeList={removeList} key={list.id} list={list} />
           ))}
           <CreateTodoList />
         </main>

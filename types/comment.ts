@@ -3,5 +3,6 @@ export interface Comment{
     content : string,
     createdAt : Date,
     author : string,
-    isMine : boolean
+    isMine : boolean,
+    todoCardId : number
 }
