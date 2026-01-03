@@ -20,16 +20,14 @@ export default function SortableTodoList({ list }: Props) {
     transform: transformWithoutScale ,
     transition,
     minWidth: 250, 
-    backgroundColor: "#f0f0f0",
     borderRadius: 5,
-    padding: 8,
     display: "flex",
     flexDirection: "column"
   }
 
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <Todolist list={list}/>
+    <div ref={setNodeRef} style={style} {...attributes}>
+      <Todolist list={list} dragListeners={listeners}/>
     </div>
   )
 }

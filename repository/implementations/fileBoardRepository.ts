@@ -15,6 +15,7 @@ export class FileBoardRepository implements IBoardRepository {
     }
 
     removeTodoList(id: number) {
+        console.log(id);
         boardData.todoLists = boardData.todoLists.filter(list => list.id != id);
     }
 

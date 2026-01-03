@@ -10,6 +10,24 @@ $text-dark: #2c2c2c;
   font-family: system-ui, sans-serif;
 }
 
+button,
+button:hover {
+  background-color: initial;
+  border: initial;
+}
+
+ul {
+  list-style-type: none;
+}
+
+.flex {
+  display: flex;
+}
+
+.items-center {
+  align-items: center;
+}
+
 body {
   background-color: $bg-blue;
   color: white;
@@ -101,4 +119,24 @@ body {
 .dots {
   cursor: pointer;
   border: initial;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+.todo-list-operations {
+  position: relative;
+
+  .operations {
+    width: 260px;
+    background-color: $card-bg;
+    position: absolute;
+    left: 0;
+    top: 100%;
+  }
 }
