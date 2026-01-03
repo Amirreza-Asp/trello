@@ -3,9 +3,13 @@ import { TodoList } from "@/types/todoList";
 import { injectable } from 'tsyringe';
 import { IBoardRepository } from "../IBoardRepository";
 import { boardData } from "./data";
+import BoardHeader from "@/components/board/board-header";
 
 @injectable()
 export class FileBoardRepository implements IBoardRepository {
+    removeTodoListCards(todoListId: number): void {
+        boardData.todoLists.find(list => list.id == todoListId)!.todoCards = []
+    }
     getBoard(): Board {
         return boardData;
     }

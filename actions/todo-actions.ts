@@ -9,10 +9,10 @@ export async function createList(title: string) {
   const requestContainer = createRequestContainer()
   const boardRepository = requestContainer.resolve<IBoardRepository>('IBoardRepository');
 
-  let todoList : TodoList = {
-    id : Math.random(),
-    title : title,
-    todoCards : []
+  let todoList: TodoList = {
+    id: Math.random(),
+    title: title,
+    todoCards: []
   }
 
   boardRepository.addTodoList(todoList)
@@ -20,16 +20,23 @@ export async function createList(title: string) {
   revalidatePath('/')
 }
 
-export async function deleteList(id : number){
+export async function deleteList(id: number) {
   const requestContainer = createRequestContainer()
   const boardRepository = requestContainer.resolve<IBoardRepository>('IBoardRepository');
   boardRepository.removeTodoList(id);
 
   revalidatePath('/')
 }
+export async function removeTodoListCards(id: number) {
+  const requestContainer = createRequestContainer()
+  const boardRepository = requestContainer.resolve<IBoardRepository>('IBoardRepository');
+  boardRepository.removeTodoListCards(id);
+
+  revalidatePath('/')
+}
 
 
-export async function updateTodoLists(todoLists : TodoList[]){
+export async function updateTodoLists(todoLists: TodoList[]) {
   const requestContainer = createRequestContainer()
   const boardRepository = requestContainer.resolve<IBoardRepository>('IBoardRepository');
   boardRepository.updateTodoListRange(todoLists);
