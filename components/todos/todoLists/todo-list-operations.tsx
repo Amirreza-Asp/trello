@@ -9,9 +9,10 @@ import { useState } from "react";
 interface Props {
   id: number;
   removeList: (id: number) => void;
+  removeTodoCards: (todoListId: number) => void;
 }
 
-export default function TodoListOperations({ id, removeList }: Props) {
+export default function TodoListOperations({ id, removeList, removeTodoCards }: Props) {
   const [isShowOperations, setShowOperations] = useState(false);
 
   const remove = async () => {
@@ -21,9 +22,13 @@ export default function TodoListOperations({ id, removeList }: Props) {
 
     removeList(id);
   };
-  const removeTodoCards = async () => {
-    await removeTodoCardsByTodoListId(id);
-    setShowOperations(false);
+
+  const removeTodoCardsList = async () => {
+    await fetch(`/api/todoCard/delete?id=${id}`, {
+      method: "DELETE",
+    });
+
+    removeTodoCards(id);
   };
 
   return (
@@ -39,8 +44,8 @@ export default function TodoListOperations({ id, removeList }: Props) {
       </button>
       {isShowOperations && (
         <div className="operations">
-          <div className="flex items-center">
-            <h4 style={{ flexGrow: 1 }}>List Actions</h4>
+          <div className="header" >
+            <h4>List Actions</h4>
             <button
               type="button"
               style={{ width: "12px", height: "12px" }}
@@ -53,7 +58,7 @@ export default function TodoListOperations({ id, removeList }: Props) {
           <hr />
           <ul>
             <li onClick={remove}>Delete List</li>
-            <li onClick={removeTodoCards}>Delete List Items</li>
+            <li onClick={removeTodoCardsList}>Delete List Items</li>
           </ul>
         </div>
       )}

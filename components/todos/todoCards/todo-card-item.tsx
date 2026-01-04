@@ -1,14 +1,37 @@
-import type { TodoCard } from "@/types/todoCard"
+"use client";
 
-interface Props{
-    card : TodoCard
+import { useState } from "react";
+
+import type { TodoCard } from "@/types/todoCard";
+import CommentsModal from "@/components/comment-moda";
+
+
+
+interface Props {
+  card: TodoCard;
 }
 
-export default function TodoCardItem({card: todo} : Props) {
+export default function TodoCardItem({ card: todo }: Props) {
+  const [open, setOpen] = useState(false);
+
   return (
-    <div className="card">
+    <>
+      <div className="card">
         <p>{todo.title}</p>
-        <span className="comment">Comments ({0})</span>
-    </div>
-  )
+
+        <button
+          className="comment"
+          onClick={() => setOpen(true)}
+        >
+          Comments ({0})
+        </button>
+      </div>
+
+      <CommentsModal
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        title={`Comments for "${todo.title}"`}
+      />
+    </>
+  );
 }

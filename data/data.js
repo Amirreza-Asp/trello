@@ -5,9 +5,9 @@ export let boardData = [{
 }]
 
 export let todoListData = [
-    { id: 1, title: 'Todo', boardId: 1  , sortOrder : 1},
-    { id: 2, title: 'In Progress', boardId: 1 , sortOrder : 2 },
-    { id: 3, title: 'Done', boardId: 1  , sortOrder : 3},
+    { id: 1, title: 'Todo', boardId: 1, sortOrder: 1 },
+    { id: 2, title: 'In Progress', boardId: 1, sortOrder: 2 },
+    { id: 3, title: 'Done', boardId: 1, sortOrder: 3 },
 ]
 
 export let todoCardData = [
@@ -21,3 +21,4 @@ export let commentData = [
     { id: 2, content: 'hello', createdAt: new Date(), author: 'parisa', isMine: true, todoCardId: 1 },
     { id: 3, content: 'yes', createdAt: new Date(), author: 'parisa', isMine: true, todoCardId: 3 },
 ]
+

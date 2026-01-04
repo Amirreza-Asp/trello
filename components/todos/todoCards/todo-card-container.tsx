@@ -3,23 +3,15 @@ import { useEffect, useState } from "react";
 import TodoCardItem from "./todo-card-item";
 
 interface Props {
-  todoListId: number;
+  todoCards: TodoCard[];
 }
 
-export default function TodoCardContainer({ todoListId }: Props) {
-  const [todoCards, setTodoCards] = useState<TodoCard[]>([]);
+export default function TodoCardContainer({ todoCards: initialTodoCards }: Props) {
+  const [todoCards, setTodoCards] = useState<TodoCard[]>(initialTodoCards)
 
   useEffect(() => {
-    getTodoCards();
-  }, [todoListId]);
-
-  const getTodoCards = async () => {
-    const response = await fetch(
-      `/api/todoCard/getByTodoListId?todoListId=${todoListId}`
-    );
-    const todoCards = (await response.json()).data as TodoCard[];
-    setTodoCards(todoCards);
-  };
+    setTodoCards(initialTodoCards);
+  }, [initialTodoCards])
 
   return (
     <>

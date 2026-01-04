@@ -1,23 +1,33 @@
 import { db } from "@/data/db";
-import { TodoList } from "@/types/todoList";
+import { GetTodoListDto, TodoList } from "@/types/todoList";
 import { ITodoListRepository } from "../ITodoListRepository";
+import { TodoCard } from "@/types/todoCard";
 
 export class TodoListRepository implements ITodoListRepository {
-    getListByBoardId(boardId: number): TodoList[] {
+    getListByBoardId(boardId: number): GetTodoListDto[] {
+        let todoListItems: GetTodoListDto[] = [];
+
         const todoLists = db
             .prepare("SELECT * FROM TodoList WHERE boardId = ? ORDER BY SortOrder")
             .all(boardId) as TodoList[];
 
-        return todoLists;
+
+        todoLists.forEach(todoList => {
+            const todoCards = db
+                .prepare("SELECT * FROM TodoCard WHERE todoListId = ? ORDER BY Id")
+                .all(todoList.id!) as TodoCard[];
+
+            todoListItems.push(new GetTodoListDto(todoList, todoCards));
+        })
+
+        return todoListItems;
     }
 
     add(todoList: TodoList): void {
-        const jsonTodoLists = localStorage.get('todoLists');
-        let todoLists = JSON.parse(jsonTodoLists) as TodoList[];
-
-        todoLists.push(todoList);
-
-        localStorage.set('todoLists', JSON.stringify(todoLists));
+        db.prepare(`
+        INSERT INTO TodoList (title, sortOrder, boardId)
+        VALUES (?, ?, ?)
+       `).run(todoList.title, todoList.sortOrder, todoList.boardId);
     }
 
     updateRange(updatedTodoLists: TodoList[]): void {

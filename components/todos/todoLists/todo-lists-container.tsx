@@ -11,7 +11,7 @@ import {
 
 import SortableTodoList from "@/components/todos/todoLists/sortable-todo-list";
 
-import { TodoList } from "@/types/todoList";
+import { GetTodoListDto, TodoList } from "@/types/todoList";
 import {
   arrayMove,
   horizontalListSortingStrategy,
@@ -19,6 +19,7 @@ import {
 } from "@dnd-kit/sortable";
 import { useEffect, useState } from "react";
 import CreateTodoList from "./create-todo-list";
+import { TodoCard } from "@/types/todoCard";
 
 interface Props {
   boardId: number;
@@ -26,7 +27,7 @@ interface Props {
 
 export default function TodoListsContainer({ boardId }: Props) {
   const sensors = useSensors(useSensor(PointerSensor));
-  const [todoLists, setTodoLists] = useState<TodoList[]>([]);
+  const [todoLists, setTodoLists] = useState<GetTodoListDto[]>([]);
 
   useEffect(() => {
     getTodoLists();
@@ -36,7 +37,7 @@ export default function TodoListsContainer({ boardId }: Props) {
     const response = await fetch(
       `/api/todoList/getListByBoardId?boardId=${boardId}`
     );
-    const todoLists = (await response.json()).data as TodoList[];
+    const todoLists = (await response.json()).data as GetTodoListDto[];
     setTodoLists(todoLists);
   };
 
@@ -45,6 +46,32 @@ export default function TodoListsContainer({ boardId }: Props) {
       return [...oldTodoLists.filter((todoList) => todoList.id !== id)];
     });
   };
+
+  const removeTodoCards = (todoListId: number) => {
+    setTodoLists(oldTodoLists => {
+      let newTodoLists = [...oldTodoLists];
+
+      if (newTodoLists.find(todoList => todoList.id == todoListId))
+        newTodoLists.find(todoList => todoList.id == todoListId)!.todoCards = [];
+
+      return newTodoLists;
+    })
+  }
+
+  const addTodoCard = (todoCard: TodoCard) => {
+    setTodoLists(oldTodoLists => {
+      const newTodoLists = [...oldTodoLists];
+
+      const todoList = newTodoLists.find(todoList => todoList.id == todoCard.todoListId);
+
+      if (!todoList?.todoCards.find(todo => todo.id == todoCard.id))
+        todoList!.todoCards = [...todoList!.todoCards, todoCard];
+
+      return newTodoLists;
+    });
+  }
+
+
 
   async function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
@@ -82,7 +109,7 @@ export default function TodoListsContainer({ boardId }: Props) {
       >
         <main className="board" style={{ display: "flex", gap: "16px" }}>
           {todoLists.map((list) => (
-            <SortableTodoList removeList={removeList} key={list.id} list={list} />
+            <SortableTodoList removeTodoCards={removeTodoCards} addTodoCard={addTodoCard} removeList={removeList} key={list.id} list={list} />
           ))}
           <CreateTodoList />
         </main>

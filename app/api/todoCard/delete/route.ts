@@ -1,8 +1,10 @@
-import { ITodoListRepository } from "@/repository/ITodoListRepository";
+import { ITodoCardRepository } from "@/repository/ITodoCardRepository";
+
 import { createRequestContainer } from "@/repository/requestContainer";
 import { NextResponse } from "next/server";
 
 export async function DELETE(request: Request) {
+    console.log(request.url)
     try {
         const { searchParams } = new URL(request.url);
 
@@ -16,9 +18,10 @@ export async function DELETE(request: Request) {
         }
 
         const requestContainer = createRequestContainer()
-        const todoListRepository = requestContainer.resolve<ITodoListRepository>('ITodoListRepository');
+        const todoCardRepository = requestContainer.resolve<ITodoCardRepository>('ITodoCardRepository');
 
-        todoListRepository.remove(id);
+        todoCardRepository.remove(id);
+
 
         return NextResponse.json({ status: 200 })
     }
