@@ -11,7 +11,8 @@ import {
 
 import SortableTodoList from "@/components/todos/todoLists/sortable-todo-list";
 
-import { GetTodoListDto, TodoList } from "@/types/todoList";
+import { TodoCard, TodoCardDto } from "@/types/todoCard";
+import { TodoList, TodoListDto } from "@/types/todoList";
 import {
   arrayMove,
   horizontalListSortingStrategy,
@@ -19,7 +20,6 @@ import {
 } from "@dnd-kit/sortable";
 import { useEffect, useState } from "react";
 import CreateTodoList from "./create-todo-list";
-import { TodoCard } from "@/types/todoCard";
 
 interface Props {
   boardId: number;
@@ -27,7 +27,7 @@ interface Props {
 
 export default function TodoListsContainer({ boardId }: Props) {
   const sensors = useSensors(useSensor(PointerSensor));
-  const [todoLists, setTodoLists] = useState<GetTodoListDto[]>([]);
+  const [todoLists, setTodoLists] = useState<TodoListDto[]>([]);
 
   useEffect(() => {
     getTodoLists();
@@ -37,7 +37,7 @@ export default function TodoListsContainer({ boardId }: Props) {
     const response = await fetch(
       `/api/todoList/getListByBoardId?boardId=${boardId}`
     );
-    const todoLists = (await response.json()).data as GetTodoListDto[];
+    const todoLists = (await response.json()).data as TodoListDto[];
     setTodoLists(todoLists);
   };
 
@@ -65,7 +65,7 @@ export default function TodoListsContainer({ boardId }: Props) {
       const todoList = newTodoLists.find(todoList => todoList.id == todoCard.todoListId);
 
       if (!todoList?.todoCards.find(todo => todo.id == todoCard.id))
-        todoList!.todoCards = [...todoList!.todoCards, todoCard];
+        todoList!.todoCards = [...todoList!.todoCards, new TodoCardDto(todoCard)];
 
       return newTodoLists;
     });

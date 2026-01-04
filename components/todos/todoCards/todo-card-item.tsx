@@ -2,13 +2,11 @@
 
 import { useState } from "react";
 
-import type { TodoCard } from "@/types/todoCard";
 import CommentsModal from "@/components/comment-moda";
-
-
+import type { TodoCardDto } from "@/types/todoCard";
 
 interface Props {
-  card: TodoCard;
+  card: TodoCardDto;
 }
 
 export default function TodoCardItem({ card: todo }: Props) {
@@ -23,7 +21,7 @@ export default function TodoCardItem({ card: todo }: Props) {
           className="comment"
           onClick={() => setOpen(true)}
         >
-          Comments ({0})
+          Comments ({todo.commentsCount})
         </button>
       </div>
 

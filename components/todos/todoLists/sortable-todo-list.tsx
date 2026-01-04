@@ -1,13 +1,13 @@
 'use client'
 
-import { GetTodoListDto } from "@/types/todoList";
+import { TodoCard } from "@/types/todoCard";
+import { TodoListDto } from "@/types/todoList";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSSProperties } from "react";
 import Todolist from "./todo-list";
-import { TodoCard } from "@/types/todoCard";
 
 interface Props {
-  list: GetTodoListDto,
+  list: TodoListDto,
   removeList: (id: number) => void,
   removeTodoCards: (todoListId: number) => void;
   addTodoCard: (model: TodoCard) => void

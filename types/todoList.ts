@@ -1,4 +1,4 @@
-import { TodoCard } from "./todoCard"
+import { TodoCardDto } from "./todoCard";
 
 export interface TodoList {
     id?: number,
@@ -8,16 +8,16 @@ export interface TodoList {
 }
 
 
-export interface GetTodoListDto {
+export interface TodoListDto {
     id: number,
     title: string,
     boardId: number,
     sortOrder: number,
-    todoCards: TodoCard[]
+    todoCards: TodoCardDto[]
 }
 
-export class GetTodoListDto implements GetTodoListDto {
-    constructor(todoList: TodoList, todoCards?: TodoCard[]) {
+export class TodoListDto implements TodoListDto {
+    constructor(todoList: TodoList, todoCards?: TodoCardDto[]) {
         this.id = todoList.id!;
         this.title = todoList.title;
         this.boardId = todoList.boardId;

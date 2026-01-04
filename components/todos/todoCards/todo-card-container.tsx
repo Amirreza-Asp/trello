@@ -1,18 +1,11 @@
-import { TodoCard } from "@/types/todoCard";
-import { useEffect, useState } from "react";
+import { TodoCardDto } from "@/types/todoCard";
 import TodoCardItem from "./todo-card-item";
 
 interface Props {
-  todoCards: TodoCard[];
+  todoCards: TodoCardDto[];
 }
 
-export default function TodoCardContainer({ todoCards: initialTodoCards }: Props) {
-  const [todoCards, setTodoCards] = useState<TodoCard[]>(initialTodoCards)
-
-  useEffect(() => {
-    setTodoCards(initialTodoCards);
-  }, [initialTodoCards])
-
+export default function TodoCardContainer({ todoCards }: Props) {
   return (
     <>
       {todoCards.map((todo) => (

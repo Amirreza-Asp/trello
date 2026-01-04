@@ -1,7 +1,7 @@
-import { GetTodoListDto, TodoList } from "@/types/todoList";
+import { TodoList, TodoListDto } from "@/types/todoList";
 
 export interface ITodoListRepository {
-    getListByBoardId(boardId: number): GetTodoListDto[],
+    getListByBoardId(boardId: number): TodoListDto[],
 
     remove(id: number): void,
     add(todoList: TodoList): void,

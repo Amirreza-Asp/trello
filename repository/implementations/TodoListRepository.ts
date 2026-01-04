@@ -1,11 +1,11 @@
 import { db } from "@/data/db";
-import { GetTodoListDto, TodoList } from "@/types/todoList";
+import { TodoCardDto } from "@/types/todoCard";
+import { TodoList, TodoListDto } from "@/types/todoList";
 import { ITodoListRepository } from "../ITodoListRepository";
-import { TodoCard } from "@/types/todoCard";
 
 export class TodoListRepository implements ITodoListRepository {
-    getListByBoardId(boardId: number): GetTodoListDto[] {
-        let todoListItems: GetTodoListDto[] = [];
+    getListByBoardId(boardId: number): TodoListDto[] {
+        let todoListItems: TodoListDto[] = [];
 
         const todoLists = db
             .prepare("SELECT * FROM TodoList WHERE boardId = ? ORDER BY SortOrder")
@@ -14,10 +14,15 @@ export class TodoListRepository implements ITodoListRepository {
 
         todoLists.forEach(todoList => {
             const todoCards = db
-                .prepare("SELECT * FROM TodoCard WHERE todoListId = ? ORDER BY Id")
-                .all(todoList.id!) as TodoCard[];
+                .prepare(`SELECT 
+                            t.*, 
+                            (SELECT COUNT(*) FROM Comments c WHERE c.todoCardId = t.Id) AS commentsCount 
+                          FROM TodoCard t 
+                          WHERE t.todoListId = ? 
+                          ORDER BY t.Id`)
+                .all(todoList.id!) as TodoCardDto[];
 
-            todoListItems.push(new GetTodoListDto(todoList, todoCards));
+            todoListItems.push(new TodoListDto(todoList , todoCards));
         })
 
         return todoListItems;
