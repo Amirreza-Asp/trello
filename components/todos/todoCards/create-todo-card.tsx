@@ -1,3 +1,4 @@
+'use client'
 import { TodoCard } from "@/types/todoCard";
 import { useRef, useState } from "react";
 

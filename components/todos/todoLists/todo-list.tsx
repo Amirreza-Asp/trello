@@ -1,3 +1,4 @@
+'use client'
 import { TodoCard } from "@/types/todoCard";
 import { TodoListDto, UpdateTodoListTitleDto } from "@/types/todoList";
 import { useWindowEvent } from "@/utilities/hooks/useWindowEvent";

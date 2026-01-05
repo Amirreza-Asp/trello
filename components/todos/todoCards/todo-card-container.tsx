@@ -1,3 +1,4 @@
+'use client'
 import { TodoCardDto } from "@/types/todoCard";
 import TodoCardItem from "./todo-card-item";
 
