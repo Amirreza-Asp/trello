@@ -28,7 +28,7 @@ export function initSchema() {
     `);
 
     db.exec(`
-       CREATE TABLE IF NOT EXISTS Comments (
+       CREATE TABLE IF NOT EXISTS Comment (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             content TEXT NOT NULL,
             createdAt TEXT NOT NULL DEFAULT (datetime('now')),

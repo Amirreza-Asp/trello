@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import CommentsModal from "@/components/comment-moda";
+import CommentsModal from "@/components/comment-modal";
 import type { TodoCardDto } from "@/types/todoCard";
 
 interface Props {
@@ -12,9 +12,10 @@ interface Props {
 export default function TodoCardItem({ card: todo }: Props) {
   const [open, setOpen] = useState(false);
 
+
   return (
     <>
-      <div className="card">
+      <div className="card" >
         <p>{todo.title}</p>
 
         <button
@@ -25,11 +26,12 @@ export default function TodoCardItem({ card: todo }: Props) {
         </button>
       </div>
 
-      <CommentsModal
+      {open && <CommentsModal
+        todoCardId={todo.id}
         isOpen={open}
         onClose={() => setOpen(false)}
         title={`Comments for "${todo.title}"`}
-      />
+      />}
     </>
   );
 }

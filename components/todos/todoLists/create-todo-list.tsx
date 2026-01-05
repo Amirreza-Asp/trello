@@ -1,33 +1,40 @@
 "use client";
 
-import { createList } from "@/actions/todo-actions";
 import { TodoList } from "@/types/todoList";
-import { Arya } from "next/font/google";
+import type { CreateTodoList } from "@/types/todoList";
 import { useState } from "react";
 
-export default function CreateTodoList() {
+interface Props {
+  addTodoList: (todoList: TodoList) => void
+}
+
+export default function CreateTodoList({ addTodoList }: Props) {
   const [isAddAnotherList, setIsAddAnotherList] = useState<boolean>(false);
   const [title, setTitle] = useState<string>('')
 
   const addTodo = async () => {
 
-    const body: TodoList = {
-      sortOrder: Number.MAX_SAFE_INTEGER,
+    const body: CreateTodoList = {
       title: title,
       boardId: 1
     }
 
-    await fetch('/api/todoList/add', {
+    const response = await fetch('/api/todoList/add', {
       method: "Post",
       body: JSON.stringify(body)
     })
 
-    createList(title, 1);
+    const id = (await response.json()).id;
+
+    const todoList = new TodoList(body);
+    todoList.id = id;
+
     setIsAddAnotherList(false);
+    addTodoList(todoList);
   }
 
   return (
-    <>
+    <div style={{ flex: '0 0 auto' }}>
       {!isAddAnotherList ? (
         <button className="add-list" onClick={() => setIsAddAnotherList(true)}>
           + Add another list
@@ -50,13 +57,13 @@ export default function CreateTodoList() {
             >
               <path
                 d="M6 6L18 18M18 6L6 18"
-                stroke="#888"        // رنگ کم‌رنگ‌تر
-                strokeWidth="4"      // تپل‌تر
+                stroke="#888"
+                strokeWidth="4"
                 strokeLinecap="round"
               />
             </svg></button></div>
         </div>
       )}
-    </>
+    </div>
   );
 }

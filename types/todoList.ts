@@ -7,6 +7,14 @@ export interface TodoList {
     sortOrder: number
 }
 
+export class TodoList implements TodoList {
+    constructor(model: CreateTodoList) {
+        this.title = model.title;
+        this.boardId = model.boardId;
+        this.sortOrder = Number.MAX_SAFE_INTEGER;
+    }
+}
+
 
 export interface TodoListDto {
     id: number,
@@ -28,5 +36,10 @@ export class TodoListDto implements TodoListDto {
 
 
 export interface CreateTodoList {
-    title: string
+    title: string,
+    boardId: number
+}
+export interface UpdateTodoListTitleDto {
+    id: number,
+    title: string,
 }

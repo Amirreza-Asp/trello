@@ -11,14 +11,6 @@ export class TodoCardRepository implements ITodoCardRepository {
         return todoCards;
     }
 
-    // removeRangeByTodoListId(todoListId: number): void {
-    //     const jsonTodoCards = localStorage.get('todoCards');
-    //     let todoCards = JSON.parse(jsonTodoCards) as TodoCard[];
-
-    //     todoCards = todoCards.filter(todoCard => todoCard.todoListId != todoListId);
-
-    //     localStorage.set('todoCards', JSON.stringify(todoCards));
-    // }
     add(todoCard: TodoCard): number {
         const result = db.prepare(`
             INSERT INTO TodoCard (title, todoListId)
@@ -27,6 +19,7 @@ export class TodoCardRepository implements ITodoCardRepository {
 
         return result.lastInsertRowid as number;
     }
+
     remove(todoListId: number): void {
         db.prepare(`
             DELETE FROM TodoCard WHERE todoListId = ?

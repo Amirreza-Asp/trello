@@ -2,7 +2,7 @@ import { ITodoCardRepository } from "@/repository/ITodoCardRepository";
 
 import { createRequestContainer } from "@/repository/requestContainer";
 import { TodoCard } from "@/types/todoCard";
-import type { TodoList } from "@/types/todoList";
+
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {

@@ -1,12 +1,11 @@
-import Todolist from "@/components/todos/todoLists/todo-list";
 import { ITodoListRepository } from "@/repository/ITodoListRepository";
 import { createRequestContainer } from "@/repository/requestContainer";
-import { CreateTodoList, TodoList } from "@/types/todoList";
+import type { TodoList, UpdateTodoListTitleDto } from "@/types/todoList";
 import { NextResponse } from "next/server";
 
-export async function POST(req: Request) {
+export async function PUT(req: Request) {
     try {
-        const body: CreateTodoList = await req.json();
+        const body: UpdateTodoListTitleDto = await req.json();
 
         if (!body) {
             return NextResponse.json({ error: "Invalid data" }, { status: 400 });
@@ -15,12 +14,11 @@ export async function POST(req: Request) {
         const requestContainer = createRequestContainer()
         const todoListRepository = requestContainer.resolve<ITodoListRepository>('ITodoListRepository');
 
-        const todoList = new TodoList(body);
-        const id = todoListRepository.add(todoList);
+        todoListRepository.updateTitle(body);
 
-        return NextResponse.json({ id: id, message: "TodoLists create successfully" });
+        return NextResponse.json({ message: "TodoLists updated successfully" });
     } catch (err) {
-        console.error("Error creating TodoLists:", err);
+        console.error("Error updating TodoLists:", err);
         return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
     }
 }

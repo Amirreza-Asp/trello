@@ -1,6 +1,5 @@
 "use client";
 
-import { removeTodoCardsByTodoListId } from "@/actions/todo-actions";
 import CloseIcon from "@/public/close.svg";
 import ThreeDotIcon from "@/public/three-dot.svg";
 import Image from "next/image";

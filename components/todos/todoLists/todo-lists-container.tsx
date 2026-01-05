@@ -12,7 +12,7 @@ import {
 import SortableTodoList from "@/components/todos/todoLists/sortable-todo-list";
 
 import { TodoCard, TodoCardDto } from "@/types/todoCard";
-import { TodoList, TodoListDto } from "@/types/todoList";
+import { TodoList, TodoListDto, UpdateTodoListTitleDto } from "@/types/todoList";
 import {
   arrayMove,
   horizontalListSortingStrategy,
@@ -40,6 +40,10 @@ export default function TodoListsContainer({ boardId }: Props) {
     const todoLists = (await response.json()).data as TodoListDto[];
     setTodoLists(todoLists);
   };
+
+  const addTodoList = (model: TodoList) => {
+    setTodoLists(oldTodoLists => [...oldTodoLists, new TodoListDto(model)])
+  }
 
   const removeList = (id: number) => {
     setTodoLists((oldTodoLists) => {
@@ -69,6 +73,14 @@ export default function TodoListsContainer({ boardId }: Props) {
 
       return newTodoLists;
     });
+  }
+
+  const updateTitle = (model: UpdateTodoListTitleDto): void => {
+    setTodoLists(oldTodoLists => {
+      let newTodoLists = [...oldTodoLists];
+      newTodoLists.find(todoList => todoList.id == model.id)!.title = model.title
+      return newTodoLists
+    })
   }
 
 
@@ -107,11 +119,11 @@ export default function TodoListsContainer({ boardId }: Props) {
         items={todoLists.map((l) => l.id.toString())}
         strategy={horizontalListSortingStrategy}
       >
-        <main className="board" style={{ display: "flex", gap: "16px" }}>
+        <main className="board" >
           {todoLists.map((list) => (
-            <SortableTodoList removeTodoCards={removeTodoCards} addTodoCard={addTodoCard} removeList={removeList} key={list.id} list={list} />
+            <SortableTodoList updateTitle={updateTitle} removeTodoCards={removeTodoCards} addTodoCard={addTodoCard} removeList={removeList} key={list.id} list={list} />
           ))}
-          <CreateTodoList />
+          <CreateTodoList addTodoList={addTodoList} />
         </main>
       </SortableContext>
     </DndContext>

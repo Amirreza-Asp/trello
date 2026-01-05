@@ -1,10 +1,11 @@
-import { boardData, todoCardData, todoListData } from "./data.js";
+import { boardData, commentData, todoCardData, todoListData } from "./data.js";
 import { db } from "./db.js";
 
 export function seedData() {
     seedBoards();
     seedTodoLists();
     seedTodoCards();
+    seedComments();
 }
 
 function seedBoards() {
@@ -50,7 +51,7 @@ function seedTodoLists() {
 
         const insertMany = db.transaction((todoLists) => {
             for (const todoList of todoLists) {
-                insert.run(todoList.title, todoList.boardId , todoList.sortOrder);
+                insert.run(todoList.title, todoList.boardId, todoList.sortOrder);
             }
         });
 
@@ -58,6 +59,7 @@ function seedTodoLists() {
         console.log("🌱 todoList inserted");
     }
 }
+
 function seedTodoCards() {
     const todoCardsCount = db
         .prepare("SELECT COUNT(*) as count FROM todoCard")
@@ -83,3 +85,30 @@ function seedTodoCards() {
         console.log("🌱 todoList inserted");
     }
 }
+
+function seedComments() {
+    const commentsCount = db
+        .prepare("SELECT COUNT(*) as count FROM Comment")
+        .get();
+
+    if (commentsCount.count > 0) {
+        console.log("✅ comment already seeded");
+    }
+    else {
+
+        const insert = db.prepare(`
+            INSERT INTO comment (content, createdAt , author , isMine , todoCardId)
+            VALUES (?, ? , ? , ? , ?)
+        `);
+
+        const insertMany = db.transaction((comments) => {
+            for (const comment of comments) {
+                insert.run(comment.content, comment.createdAt.toString(), comment.author, comment.isMine ? 1 : 0, comment.todoCardId);
+            }
+        });
+
+        insertMany(commentData);
+        console.log("🌱 comments inserted");
+    }
+}
+

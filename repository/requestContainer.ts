@@ -6,6 +6,8 @@ import { TodoCardRepository } from './implementations/TodoCardRepository';
 import { TodoListRepository } from './implementations/TodoListRepository';
 import { ITodoCardRepository } from './ITodoCardRepository';
 import { ITodoListRepository } from './ITodoListRepository';
+import { ICommentRepository } from './ICommentRepository';
+import { CommentRepository } from './implementations/CommentRepository';
 
 export function createRequestContainer(): DependencyContainer {
   const requestContainer = container.createChildContainer()
@@ -14,12 +16,15 @@ export function createRequestContainer(): DependencyContainer {
     useClass: BoardRepository
   });
 
-  requestContainer.register<ITodoListRepository>('ITodoListRepository' , {
-    useClass : TodoListRepository
+  requestContainer.register<ITodoListRepository>('ITodoListRepository', {
+    useClass: TodoListRepository
   })
 
-  requestContainer.register<ITodoCardRepository>('ITodoCardRepository' , { 
-    useClass : TodoCardRepository
+  requestContainer.register<ITodoCardRepository>('ITodoCardRepository', {
+    useClass: TodoCardRepository
+  })
+  requestContainer.register<ICommentRepository>('ICommentRepository', {
+    useClass: CommentRepository
   })
 
   return requestContainer

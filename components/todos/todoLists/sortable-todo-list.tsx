@@ -1,7 +1,7 @@
 'use client'
 
 import { TodoCard } from "@/types/todoCard";
-import { TodoListDto } from "@/types/todoList";
+import { TodoListDto, UpdateTodoListTitleDto } from "@/types/todoList";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSSProperties } from "react";
 import Todolist from "./todo-list";
@@ -10,10 +10,11 @@ interface Props {
   list: TodoListDto,
   removeList: (id: number) => void,
   removeTodoCards: (todoListId: number) => void;
-  addTodoCard: (model: TodoCard) => void
+  addTodoCard: (model: TodoCard) => void,
+  updateTitle: (model: UpdateTodoListTitleDto) => void
 }
 
-export default function SortableTodoList({ list, removeList, removeTodoCards, addTodoCard }: Props) {
+export default function SortableTodoList({ list, removeList, removeTodoCards, addTodoCard, updateTitle }: Props) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: list.id.toString() })
 
   const transformWithoutScale = transform
@@ -31,7 +32,7 @@ export default function SortableTodoList({ list, removeList, removeTodoCards, ad
 
   return (
     <div ref={setNodeRef} style={style} {...attributes}>
-      <Todolist addTodoCard={addTodoCard} removeList={removeList} list={list} removeTodoCards={removeTodoCards} dragListeners={listeners} />
+      <Todolist updateTitle={updateTitle} addTodoCard={addTodoCard} removeList={removeList} list={list} removeTodoCards={removeTodoCards} dragListeners={listeners} />
     </div>
   )
 }
